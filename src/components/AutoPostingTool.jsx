@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import TaskCard from './TaskCard';
 import EditorModal from './EditorModal';
+import ScheduleModal from './ScheduleModal';
 import { toast } from 'sonner';
 
 const initialPosts = [
@@ -13,7 +14,7 @@ const initialPosts = [
       author: 'John Doe'
     },
     customWriteup: 'Fascinating insights on AI\'s impact. What are your thoughts on AI in your industry?',
-    scheduledDateTime: '2023-04-15T10:00:00',
+    scheduledDateTime: null,
     status: 'pending'
   },
   {
@@ -24,14 +25,15 @@ const initialPosts = [
       author: 'Jane Smith'
     },
     customWriteup: 'Remote work is here to stay. How has your company adapted to this new normal?',
-    scheduledDateTime: '2023-04-16T14:30:00',
-    status: 'verified'
+    scheduledDateTime: null,
+    status: 'pending'
   },
 ];
 
 const AutoPostingTool = () => {
   const [posts, setPosts] = useState(initialPosts);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
+  const [isScheduleOpen, setIsScheduleOpen] = useState(false);
   const [currentEditPost, setCurrentEditPost] = useState(null);
 
   const onDragEnd = (result) => {
@@ -42,9 +44,9 @@ const AutoPostingTool = () => {
     setPosts(items);
   };
 
-  const handleVerify = (post) => {
+  const handleSchedule = (post) => {
     setCurrentEditPost(post);
-    setIsEditorOpen(true);
+    setIsScheduleOpen(true);
   };
 
   const handleEdit = (post) => {
@@ -53,18 +55,10 @@ const AutoPostingTool = () => {
   };
 
   const handleSend = (postId) => {
-    // Simulate sending the post
     setPosts(posts.map(post => 
-      post.id === postId ? { ...post, status: 'posted' } : post
+      post.id === postId ? { ...post, status: 'posted', scheduledDateTime: new Date().toISOString() } : post
     ));
-    
-    // Show a success toast
     toast.success('Post sent successfully!');
-    
-    // Optionally, remove the post from the list after a delay
-    setTimeout(() => {
-      setPosts(posts.filter(post => post.id !== postId));
-    }, 2000);
   };
 
   const handleCancel = (postId) => {
@@ -74,10 +68,18 @@ const AutoPostingTool = () => {
 
   const handleSaveEdit = (editedPost) => {
     setPosts(posts.map(post => 
-      post.id === editedPost.id ? { ...post, ...editedPost, status: 'verified' } : post
+      post.id === editedPost.id ? { ...post, ...editedPost } : post
     ));
     setIsEditorOpen(false);
     toast.success('Post updated successfully!');
+  };
+
+  const handleSaveSchedule = (scheduledPost) => {
+    setPosts(posts.map(post => 
+      post.id === scheduledPost.id ? { ...post, ...scheduledPost } : post
+    ));
+    setIsScheduleOpen(false);
+    toast.success('Post scheduled successfully!');
   };
 
   return (
@@ -93,7 +95,7 @@ const AutoPostingTool = () => {
                     <li ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                       <TaskCard
                         post={post}
-                        onVerify={() => handleVerify(post)}
+                        onSchedule={() => handleSchedule(post)}
                         onEdit={() => handleEdit(post)}
                         onSend={() => handleSend(post.id)}
                         onCancel={() => handleCancel(post.id)}
@@ -112,6 +114,13 @@ const AutoPostingTool = () => {
           post={currentEditPost}
           onSave={handleSaveEdit}
           onClose={() => setIsEditorOpen(false)}
+        />
+      )}
+      {isScheduleOpen && (
+        <ScheduleModal
+          post={currentEditPost}
+          onSave={handleSaveSchedule}
+          onClose={() => setIsScheduleOpen(false)}
         />
       )}
     </div>
