@@ -24,19 +24,28 @@ const TaskCard = ({ post, onVerify, onEdit, onSend, onCancel }) => {
       <p className="text-sm mb-4">{post.customWriteup}</p>
       <div className="flex justify-between">
         <div className="space-x-2">
-          <button onClick={onVerify} className="p-2 bg-green-500 text-white rounded-full hover:bg-green-600">
-            <CheckCircle size={16} />
-          </button>
-          <button onClick={onEdit} className="p-2 bg-blue-500 text-white rounded-full hover:bg-blue-600">
-            <Edit2 size={16} />
-          </button>
-          <button onClick={onSend} className="p-2 bg-purple-500 text-white rounded-full hover:bg-purple-600">
-            <Send size={16} />
-          </button>
+          {post.status !== 'posted' && (
+            <>
+              <button onClick={onVerify} className="p-2 bg-green-500 text-white rounded-full hover:bg-green-600">
+                <CheckCircle size={16} />
+              </button>
+              <button onClick={onEdit} className="p-2 bg-blue-500 text-white rounded-full hover:bg-blue-600">
+                <Edit2 size={16} />
+              </button>
+              <button onClick={onSend} className="p-2 bg-purple-500 text-white rounded-full hover:bg-purple-600">
+                <Send size={16} />
+              </button>
+            </>
+          )}
         </div>
-        <button onClick={onCancel} className="p-2 bg-red-500 text-white rounded-full hover:bg-red-600">
-          <X size={16} />
-        </button>
+        {post.status !== 'posted' && (
+          <button onClick={onCancel} className="p-2 bg-red-500 text-white rounded-full hover:bg-red-600">
+            <X size={16} />
+          </button>
+        )}
+        {post.status === 'posted' && (
+          <span className="text-sm font-semibold text-blue-600">Posted</span>
+        )}
       </div>
     </motion.div>
   );

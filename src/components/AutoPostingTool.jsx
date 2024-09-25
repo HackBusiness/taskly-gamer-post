@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import TaskCard from './TaskCard';
 import EditorModal from './EditorModal';
+import { toast } from 'sonner';
 
 const initialPosts = [
   {
@@ -26,7 +27,6 @@ const initialPosts = [
     scheduledDateTime: '2023-04-16T14:30:00',
     status: 'verified'
   },
-  // Add more initial posts as needed
 ];
 
 const AutoPostingTool = () => {
@@ -53,14 +53,23 @@ const AutoPostingTool = () => {
   };
 
   const handleSend = (postId) => {
+    // Simulate sending the post
     setPosts(posts.map(post => 
       post.id === postId ? { ...post, status: 'posted' } : post
     ));
-    // Here you would typically call an API to actually post the content
+    
+    // Show a success toast
+    toast.success('Post sent successfully!');
+    
+    // Optionally, remove the post from the list after a delay
+    setTimeout(() => {
+      setPosts(posts.filter(post => post.id !== postId));
+    }, 2000);
   };
 
   const handleCancel = (postId) => {
     setPosts(posts.filter(post => post.id !== postId));
+    toast.info('Post cancelled');
   };
 
   const handleSaveEdit = (editedPost) => {
@@ -68,6 +77,7 @@ const AutoPostingTool = () => {
       post.id === editedPost.id ? { ...post, ...editedPost, status: 'verified' } : post
     ));
     setIsEditorOpen(false);
+    toast.success('Post updated successfully!');
   };
 
   return (
