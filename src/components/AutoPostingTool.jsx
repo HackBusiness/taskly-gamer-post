@@ -3,7 +3,6 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import TaskCard from './TaskCard';
 import EditorModal from './EditorModal';
 import { toast } from 'sonner';
-import { PlusCircle } from 'lucide-react';
 
 const initialPosts = [
   {
@@ -54,10 +53,15 @@ const AutoPostingTool = () => {
   };
 
   const handleSend = (postId) => {
+    // Simulate sending the post
     setPosts(posts.map(post => 
       post.id === postId ? { ...post, status: 'posted' } : post
     ));
+    
+    // Show a success toast
     toast.success('Post sent successfully!');
+    
+    // Optionally, remove the post from the list after a delay
     setTimeout(() => {
       setPosts(posts.filter(post => post.id !== postId));
     }, 2000);
@@ -77,44 +81,32 @@ const AutoPostingTool = () => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-xl p-6 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 opacity-10"></div>
-      <div className="relative z-10">
-        <h2 className="text-2xl font-semibold text-indigo-900 mb-6">Scheduled Posts</h2>
-        <DragDropContext onDragEnd={onDragEnd}>
-          <Droppable droppableId="posts">
-            {(provided) => (
-              <ul {...provided.droppableProps} ref={provided.innerRef} className="space-y-4">
-                {posts.map((post, index) => (
-                  <Draggable key={post.id} draggableId={post.id} index={index}>
-                    {(provided) => (
-                      <li ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                        <TaskCard
-                          post={post}
-                          onVerify={() => handleVerify(post)}
-                          onEdit={() => handleEdit(post)}
-                          onSend={() => handleSend(post.id)}
-                          onCancel={() => handleCancel(post.id)}
-                        />
-                      </li>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </ul>
-            )}
-          </Droppable>
-        </DragDropContext>
-        {posts.length === 0 && (
-          <div className="text-center py-8">
-            <p className="text-gray-500 mb-4">No scheduled posts. Add some to get started!</p>
-            <button className="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors">
-              <PlusCircle className="mr-2" size={20} />
-              Add New Post
-            </button>
-          </div>
-        )}
-      </div>
+    <div className="container mx-auto p-4">
+      <h1 className="text-3xl font-bold mb-6">LinkedIn Auto-Posting Tool</h1>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId="posts">
+          {(provided) => (
+            <ul {...provided.droppableProps} ref={provided.innerRef} className="space-y-4">
+              {posts.map((post, index) => (
+                <Draggable key={post.id} draggableId={post.id} index={index}>
+                  {(provided) => (
+                    <li ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                      <TaskCard
+                        post={post}
+                        onVerify={() => handleVerify(post)}
+                        onEdit={() => handleEdit(post)}
+                        onSend={() => handleSend(post.id)}
+                        onCancel={() => handleCancel(post.id)}
+                      />
+                    </li>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </ul>
+          )}
+        </Droppable>
+      </DragDropContext>
       {isEditorOpen && (
         <EditorModal
           post={currentEditPost}
