@@ -83,8 +83,8 @@ const AutoPostingTool = () => {
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6">LinkedIn Auto-Posting Tool</h1>
+    <div className="container mx-auto p-4 bg-black text-green-400">
+      <h1 className="text-3xl font-bold mb-6 text-center">LinkedIn Auto-Posting Tool</h1>
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="posts">
           {(provided) => (
