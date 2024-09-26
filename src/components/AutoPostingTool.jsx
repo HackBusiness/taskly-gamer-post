@@ -25,8 +25,8 @@ const initialPosts = [
       author: 'Jane Smith'
     },
     customWriteup: 'Remote work is here to stay. How has your company adapted to this new normal?',
-    scheduledDateTime: null,
-    status: 'pending'
+    scheduledDateTime: '2023-05-15T14:30:00.000Z',
+    status: 'scheduled'
   },
 ];
 
@@ -79,7 +79,7 @@ const AutoPostingTool = () => {
       post.id === scheduledPost.id ? { ...post, ...scheduledPost } : post
     ));
     setIsScheduleOpen(false);
-    toast.success('Post scheduled successfully!');
+    toast.success(scheduledPost.status === 'scheduled' ? 'Post rescheduled successfully!' : 'Post scheduled successfully!');
   };
 
   return (

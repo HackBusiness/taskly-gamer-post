@@ -39,6 +39,16 @@ const TaskCard = ({ post, onSchedule, onEdit, onSend, onCancel }) => {
               </button>
             </>
           )}
+          {post.status === 'scheduled' && (
+            <>
+              <button onClick={onSchedule} className="p-2 bg-accent text-accent-foreground rounded-md hover:bg-accent/80 transition-colors">
+                Reschedule
+              </button>
+              <button onClick={onEdit} className="p-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/80 transition-colors">
+                <Edit2 size={16} />
+              </button>
+            </>
+          )}
         </div>
         {post.status === 'pending' && (
           <button onClick={onCancel} className="p-2 bg-destructive text-destructive-foreground rounded-md hover:bg-destructive/80 transition-colors">

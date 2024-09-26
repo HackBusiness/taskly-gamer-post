@@ -4,8 +4,8 @@ import { Calendar } from '@/components/ui/calendar';
 import { Input } from '@/components/ui/input';
 
 const ScheduleModal = ({ post, onSave, onClose }) => {
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedTime, setSelectedTime] = useState('12:00');
+  const [selectedDate, setSelectedDate] = useState(post.scheduledDateTime ? new Date(post.scheduledDateTime) : new Date());
+  const [selectedTime, setSelectedTime] = useState(post.scheduledDateTime ? new Date(post.scheduledDateTime).toTimeString().slice(0, 5) : '12:00');
 
   const handleSave = () => {
     const scheduledDateTime = new Date(selectedDate);
@@ -27,7 +27,7 @@ const ScheduleModal = ({ post, onSave, onClose }) => {
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: 50, opacity: 0 }}
       >
-        <h2 className="text-2xl font-bold mb-4">Schedule Post</h2>
+        <h2 className="text-2xl font-bold mb-4">{post.status === 'scheduled' ? 'Reschedule Post' : 'Schedule Post'}</h2>
         <div className="mb-4">
           <Calendar
             mode="single"
@@ -49,7 +49,7 @@ const ScheduleModal = ({ post, onSave, onClose }) => {
             Cancel
           </button>
           <button onClick={handleSave} className="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600">
-            Schedule
+            {post.status === 'scheduled' ? 'Reschedule' : 'Schedule'}
           </button>
         </div>
       </motion.div>
